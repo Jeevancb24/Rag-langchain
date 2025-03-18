@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "rag-system"
+version = "0.1.0"
+description = "pdf query using rag"
+authors = ["Jeevancb24 <jeevan.cb@suketa.in>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.11"
+uvicorn = "^0.34.0"
+langchain = "^0.3.20"
+pydantic = "^2.10.6"
+pymupdf = "^1.25.4"
+chromadb = "^0.6.3"
+openai = "^1.66.3"
+tiktoken = "^0.9.0"
+loguru = "^0.7.3"
+sentence-transformers = "^3.4.1"
+langchain-groq = "^0.2.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
