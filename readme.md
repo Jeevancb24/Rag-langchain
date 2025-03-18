@@ -1,4 +1,4 @@
-# RAG System with FastAPI & Groq
+# SHIKSHAKA - RAG System with FastAPI & Groq
 
 This project is a **Retrieval-Augmented Generation (RAG) System** built using **FastAPI** and **Groq's LLM**. It enables users to:
 - Ingest **PDF documents** into a vector database (ChromaDB).
@@ -40,13 +40,20 @@ poetry install
 Create a `.env` file and add the following variables:
 ```ini
 GROQ_API_KEY=your_groq_api_key
-VECTOR_DB_PATH=./data/vector_db
-LLM_MODEL=gemma2-9b-it
+VECTOR_DB_PATH=path_to_your_vector_database
+LLM_MODEL=model_name
 ```
 
 ---
 
 ## 🚀 Running the Application
+create the /data directory in app directory
+upload all the pdfs required -name the pdf in this format classX_subject_chapterY (ex:class10_hist_C1)
+
+after that run the script- ingestion.py using the command
+```bash
+python -m app.ingestion 
+```
 
 ### **Start the FastAPI Server**
 ```bash
@@ -153,9 +160,6 @@ ls /path/to/pdf/folder
 - 🤖 **Enhance AI responses** using fine-tuned models.
 
 ---
-
-## 📜 License
-This project is licensed under the **MIT License**.
 
 🚀 **Now you're ready to use the RAG system!** 🎉
 
