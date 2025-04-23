@@ -1,12 +1,22 @@
 import os
 from fastapi import FastAPI, Query, UploadFile, File
 from langchain_groq import ChatGroq
+from pydantic import BaseModel
 from app.retrieval import retriever
 from app.ingestion import DocumentIngestion
 from app.logger import logger
 from app.config import config
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="RAG System with Groq", version="1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # or ["*"] for all
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 llm = ChatGroq(groq_api_key=config.GROQ_API_KEY, model=config.LLM_MODEL)
 ingestor = DocumentIngestion()  # Instantiate the ingestion class
 
@@ -56,27 +66,29 @@ def query_docs(
         "response": response.content,
         "metadata": retrieved_metadata
     }
+class FolderRequest(BaseModel):
+    folder_path: str
 
 
 @app.post("/ingest")
-def ingest_documents(folder_path: str):
+def ingest_documents(data: FolderRequest):
     """
     Endpoint to ingest PDF documents from a given folder path.
     """
-    logger.info(f"Received request to ingest PDFs from folder: {folder_path}")
+    logger.info(f"Received request to ingest PDFs from folder: {data.folder_path}")
 
     # Check if the folder exists
-    if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
-        logger.error(f"Invalid folder path: {folder_path}")
+    if not os.path.exists(data.folder_path) or not os.path.isdir(data.folder_path):
+        logger.error(f"Invalid folder path: {data.folder_path}")
         return {"error": "Invalid folder path. Please provide a valid directory containing PDFs."}
 
     # Set the ingestion class to use the provided folder
-    ingestor.data_dir = folder_path
+    ingestor.data_dir = data.folder_path
 
     # Process documents
     ingestor.process_documents()
 
-    return {"message": f"Documents from {folder_path} have been successfully ingested into the vector database."}
+    return {"message": f"Documents from {data.folder_path} have been successfully ingested into the vector database."}
 
 
 if __name__ == "__main__":
