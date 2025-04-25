@@ -54,10 +54,8 @@ def query_docs(
     prompt = f"""DOCUMENT: {context}
                 USER_QUESTION: {q}
                 INSTRUCTIONS:
-                Answer the user's QUESTION using the DOCUMENT text above.
-                Keep your answer grounded in the facts of the DOCUMENT.
-                If the DOCUMENT doesn’t contain the facts to answer the USER_QUESTION, return:
-                'Provided context doesn't really contain the answer to the question.'"""
+                Answer the USER_QUESTION using the information provided in the DOCUMENT. Your response should only refer to the content of the DOCUMENT. If the DOCUMENT does not provide relevant information to answer the question, respond with "Provided context doesn't really contain the answer." For casual questions that do not relate directly to the DOCUMENT, provide a normal conversational response.
+'"""
 
     response = llm.invoke(prompt)
 
@@ -80,7 +78,7 @@ def ingest_documents(data: FolderRequest):
     # Check if the folder exists
     if not os.path.exists(data.folder_path) or not os.path.isdir(data.folder_path):
         logger.error(f"Invalid folder path: {data.folder_path}")
-        return {"error": "Invalid folder path. Please provide a valid directory containing PDFs."}
+        return {"error": "error:Invalid folder path. Please provide a valid directory containing PDFs."}
 
     # Set the ingestion class to use the provided folder
     ingestor.data_dir = data.folder_path
